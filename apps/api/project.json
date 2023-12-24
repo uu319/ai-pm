@@ -17,7 +17,8 @@
         "assets": [
           "apps/api/src/assets",
           "apps/api/src/app.yaml",
-          "apps/api/src/.gcloudignore"
+          "apps/api/src/.gcloudignore",
+          "apps/api/src/.npmrc"
         ],
         "generatePackageJson": true,
         "webpackConfig": "apps/api/webpack.config.js"
