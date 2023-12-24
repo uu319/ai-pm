@@ -15,7 +15,7 @@ export class VectorStoreService {
    * @param file - The file to be processed.
    * @returns A promise that resolves when the file has been processed.
    */
-  async processFile(file: Express.Multer.File): Promise<void> {
+  async save(file: Express.Multer.File): Promise<void> {
     const parsedPdf = await pdf(file.buffer);
 
     const splitted = new CharacterTextSplitter({
@@ -31,7 +31,7 @@ export class VectorStoreService {
     const documents = textArray.map(
       (text) =>
         new Document({
-          pageContent: text, // Add thi
+          pageContent: text,
           metadata: {
             projectId: randomString,
           },

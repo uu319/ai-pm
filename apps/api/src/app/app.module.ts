@@ -1,12 +1,24 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { VectorStoreModule } from '../vector-store/vector-store.module';
+import { ChatModule } from '../chat/chat.module';
+import { FirebaseAdminModule } from '../firebase-admin/firebase-admin.module';
+import { CurrentUserMiddleware } from '../common/middlewares/current-user.middleware';
+import { ConfigModule } from '@nestjs/config';
+import { firebaseAdminConfig } from '../common/configs/firebase-admin.config';
 
 @Module({
-  imports: [VectorStoreModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    VectorStoreModule,
+    ChatModule,
+    FirebaseAdminModule,
+    ConfigModule.forFeature(firebaseAdminConfig),
+  ],
+  controllers: [],
+  providers: [],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CurrentUserMiddleware).forRoutes('*');
+  }
+}
