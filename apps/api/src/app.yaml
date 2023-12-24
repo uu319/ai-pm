@@ -1,0 +1,21 @@
+runtime: nodejs18
+automatic_scaling:
+  min_idle_instances: 0
+  max_concurrent_requests: 30
+
+instance_class: F1
+
+inbound_services:
+  - warmup
+
+handlers:
+  - url: /.*
+    script: auto
+    secure: always
+  - url: .*
+    script: auto
+    secure: always
+
+env_variables:
+  TIMEZONE: 'Asia/Hong_Kong'
+  TZ: 'Asia/Hong_Kong'

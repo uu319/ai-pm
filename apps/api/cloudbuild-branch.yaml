@@ -1,0 +1,37 @@
+steps:
+  - name: 'node:18.16.0'
+    entrypoint: 'npm'
+    args: ['i']
+
+  - name: 'node:18.16.0'
+    entrypoint: 'npm'
+    args: ['run', 'clear-cache']
+
+  - name: 'node:18.16.0'
+    entrypoint: 'npm'
+    args: ['run', 'build', 'api', '--', '--prod']
+
+  - name: 'node:18.16.0'
+    entrypoint: 'npm'
+    args: ['run', 'create-env', 'dist/apps/api/.env']
+    env:
+      - 'OPENAI_API_KEY=${_OPENAI_API_KEY}'
+      - 'PINECONE_API_KEY=${_PINECONE_API_KEY}'
+      - 'PINECONE_ENVIRONMENT=${_PINECONE_ENVIRONMENT}'
+      - 'FIREBASE_PROJECT_ID=${_FIREBASE_PROJECT_ID}'
+      - 'FIREBASE_PRIVATE_KEY=${_FIREBASE_PRIVATE_KEY}'
+      - 'FIREBASE_CLIENT_EMAIL=${_FIREBASE_CLIENT_EMAIL}'
+      - 'FIREBASE_DATABASE_URL=${_FIREBASE_DATABASE_URL}'
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      [
+        'app',
+        'deploy',
+        'app.yaml',
+        '--no-promote',
+        '--version=${_VERSION_NAME}',
+      ]
+    dir: 'dist/apps/api'
+
+timeout: 1800s

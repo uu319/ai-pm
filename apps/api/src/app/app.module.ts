@@ -6,9 +6,13 @@ import { FirebaseAdminModule } from '../firebase-admin/firebase-admin.module';
 import { CurrentUserMiddleware } from '../common/middlewares/current-user.middleware';
 import { ConfigModule } from '@nestjs/config';
 import { firebaseAdminConfig } from '../common/configs/firebase-admin.config';
+import { WarmupModule } from '../warmup';
+import { HealthcheckModule } from '../healthcheck';
 
 @Module({
   imports: [
+    WarmupModule,
+    HealthcheckModule,
     VectorStoreModule,
     ChatModule,
     FirebaseAdminModule,
