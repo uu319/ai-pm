@@ -1,7 +1,7 @@
 steps:
   - name: 'node:18.16.1'
     entrypoint: 'npm'
-    args: ['i']
+    args: ['install']
 
   - name: 'node:18.16.1'
     entrypoint: 'npm'
