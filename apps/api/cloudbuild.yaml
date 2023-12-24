@@ -1,17 +1,17 @@
 steps:
-  - name: 'node:18.16.0'
+  - name: 'node:18.16.1'
     entrypoint: 'npm'
     args: ['i']
 
-  - name: 'node:18.16.0'
+  - name: 'node:18.16.1'
     entrypoint: 'npm'
     args: ['run', 'clear-cache']
 
-  - name: 'node:18.16.0'
+  - name: 'node:18.16.1'
     entrypoint: 'npm'
     args: ['run', 'build', 'api', '--', '--prod']
 
-  - name: 'node:18.16.0'
+  - name: 'node:18.16.1'
     entrypoint: 'npm'
     args: ['run', 'create-env', 'dist/apps/api/.env']
     env:
