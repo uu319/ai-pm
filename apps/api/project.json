@@ -19,6 +19,7 @@
           "apps/api/src/app.yaml",
           "apps/api/src/.gcloudignore"
         ],
+        "generatePackageJson": true,
         "webpackConfig": "apps/api/webpack.config.js"
       },
       "configurations": {
