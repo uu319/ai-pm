@@ -13,6 +13,7 @@
         "compiler": "tsc",
         "outputPath": "dist/apps/api",
         "main": "apps/api/src/main.ts",
+        "outputFileName": "server.js",
         "tsConfig": "apps/api/tsconfig.app.json",
         "assets": [
           "apps/api/src/assets",
