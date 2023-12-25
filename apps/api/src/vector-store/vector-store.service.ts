@@ -7,6 +7,7 @@ import { CharacterTextSplitter } from 'langchain/text_splitter';
 import { Document } from 'langchain/document';
 import { aiConfig } from '../common/configs/ai-config.config';
 import { ConfigType } from '@nestjs/config';
+import { firebaseAdminConfig } from '../common/configs/firebase-admin.config';
 
 // This is a hack to make Multer available in the Express namespace
 
@@ -14,7 +15,9 @@ import { ConfigType } from '@nestjs/config';
 export class VectorStoreService {
   constructor(
     @Inject(aiConfig.KEY)
-    private readonly aiDefaultConfig: ConfigType<typeof aiConfig>
+    private readonly aiDefaultConfig: ConfigType<typeof aiConfig>,
+    @Inject(firebaseAdminConfig.KEY)
+    private readonly firebaseConfig: ConfigType<typeof firebaseAdminConfig>
   ) {}
   /**
    * Process the given file and store its content in the vector store.
@@ -85,5 +88,12 @@ export class VectorStoreService {
     const results = await vectorStore.similaritySearch(query, 1, {});
 
     return results;
+  }
+
+  async checker() {
+    return {
+      ...this.aiDefaultConfig,
+      ...this.firebaseConfig,
+    };
   }
 }
