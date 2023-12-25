@@ -4,10 +4,9 @@ import { VectorStoreModule } from '../vector-store/vector-store.module';
 import { ChatModule } from '../chat/chat.module';
 import { FirebaseAdminModule } from '../firebase-admin/firebase-admin.module';
 import { CurrentUserMiddleware } from '../common/middlewares/current-user.middleware';
-import { ConfigModule } from '@nestjs/config';
-import { firebaseAdminConfig } from '../common/configs/firebase-admin.config';
 import { WarmupModule } from '../warmup';
 import { HealthcheckModule } from '../healthcheck';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -16,7 +15,7 @@ import { HealthcheckModule } from '../healthcheck';
     VectorStoreModule,
     ChatModule,
     FirebaseAdminModule,
-    ConfigModule.forFeature(firebaseAdminConfig),
+    ConfigModule.forRoot(),
   ],
   controllers: [],
   providers: [],
