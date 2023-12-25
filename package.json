@@ -31,8 +31,8 @@
   "dependencies": {
     "@cyber2024/pdf-parse-fixed": "1.2.5",
     "@dqbd/tiktoken": "1.0.7",
-    "mongodb": "^5.9.2",
-    "replicate": "^0.18.1",
+    "mongodb": "5.9.2",
+    "replicate": "0.18.1",
     "@nestjs/axios": "3.0.1",
     "@nestjs/common": "10.0.2",
     "@nestjs/config": "3.1.1",
