@@ -32,7 +32,6 @@
     "@cyber2024/pdf-parse-fixed": "1.2.5",
     "@dqbd/tiktoken": "1.0.7",
     "mongodb": "5.9.2",
-    "replicate": "0.18.1",
     "@nestjs/axios": "3.0.1",
     "@nestjs/common": "10.0.2",
     "@nestjs/config": "3.1.1",
@@ -46,7 +45,6 @@
     "class-validator": "0.14.0",
     "firebase-admin": "11.11.1",
     "langchain": "0.0.212",
-    "llamaindex": "0.0.40",
     "reflect-metadata": "0.1.13",
     "rxjs": "7.8.0",
     "tslib": "2.3.0"
