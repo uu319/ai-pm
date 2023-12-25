@@ -28,4 +28,9 @@ export class VectorStoreController {
   query(@Query() queryString: GetQueryParamsDto) {
     return this.vectorStoreService.queryFromEmbeding(queryString.text);
   }
+
+  @Get('/checker')
+  checker() {
+    return this.vectorStoreService.checker();
+  }
 }
