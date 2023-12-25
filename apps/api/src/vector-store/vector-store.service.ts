@@ -1,15 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import pdf from '@cyber2024/pdf-parse-fixed';
 import { Pinecone } from '@pinecone-database/pinecone';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { PineconeStore } from 'langchain/vectorstores/pinecone';
 import { CharacterTextSplitter } from 'langchain/text_splitter';
 import { Document } from 'langchain/document';
+import { aiConfig } from '../common/configs/ai-config.config';
+import { ConfigType } from '@nestjs/config';
 
 // This is a hack to make Multer available in the Express namespace
 
 @Injectable()
 export class VectorStoreService {
+  constructor(
+    @Inject(aiConfig.KEY)
+    private readonly aiDefaultConfig: ConfigType<typeof aiConfig>
+  ) {}
   /**
    * Process the given file and store its content in the vector store.
    * @param file - The file to be processed.
@@ -24,7 +30,10 @@ export class VectorStoreService {
     });
 
     const textArray = await splitted.splitText(parsedPdf.text);
-    const pinecone = new Pinecone();
+    const pinecone = new Pinecone({
+      apiKey: this.aiDefaultConfig.pineconeApiKey,
+      environment: this.aiDefaultConfig.pineconeEnvironment,
+    });
 
     const randomString = Math.random().toString(36).substring(2, 9);
 
@@ -40,11 +49,17 @@ export class VectorStoreService {
 
     const pineconeIndex = pinecone.Index('sample-index');
 
-    await PineconeStore.fromDocuments(documents, new OpenAIEmbeddings(), {
-      pineconeIndex,
-      maxConcurrency: 5,
-      // namespace: randomString,
-    });
+    await PineconeStore.fromDocuments(
+      documents,
+      new OpenAIEmbeddings({
+        openAIApiKey: this.aiDefaultConfig.openApiKey,
+      }),
+      {
+        pineconeIndex,
+        maxConcurrency: 5,
+        // namespace: randomString,
+      }
+    );
   }
 
   /**
@@ -53,12 +68,17 @@ export class VectorStoreService {
    * @returns A promise that resolves with the search results.
    */
   async queryFromEmbeding(query: string) {
-    const pinecone = new Pinecone();
+    const pinecone = new Pinecone({
+      apiKey: this.aiDefaultConfig.pineconeApiKey,
+      environment: this.aiDefaultConfig.pineconeEnvironment,
+    });
 
     const pineconeIndex = pinecone.Index('sample-index');
 
     const vectorStore = await PineconeStore.fromExistingIndex(
-      new OpenAIEmbeddings(),
+      new OpenAIEmbeddings({
+        openAIApiKey: this.aiDefaultConfig.openApiKey,
+      }),
       { pineconeIndex }
     );
 
