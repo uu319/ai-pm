@@ -5,6 +5,7 @@ import { ConfigType } from '@nestjs/config';
 import * as admin from 'firebase-admin';
 
 import { firebaseAdminConfig } from '../common/configs/firebase-admin.config';
+import storageConfigObject from '../common/configs/storage.config';
 
 @Injectable()
 export class FirebaseAdminService {
@@ -12,12 +13,19 @@ export class FirebaseAdminService {
 
   constructor(
     @Inject(firebaseAdminConfig.KEY)
-    private readonly firebaseConfig: ConfigType<typeof firebaseAdminConfig>
+    private readonly firebaseConfig: ConfigType<typeof firebaseAdminConfig>,
+
+    @Inject(storageConfigObject.KEY)
+    private storageConfig: ConfigType<typeof storageConfigObject>
   ) {
     this.firebaseApp = admin.initializeApp(this.firebaseConfig, randomUUID());
   }
 
   getFirebaseAdmin(): admin.app.App {
     return this.firebaseApp;
+  }
+
+  bucket() {
+    return this.firebaseApp.storage().bucket(this.storageConfig.firebaseBucket);
   }
 }
