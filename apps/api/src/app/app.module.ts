@@ -7,6 +7,7 @@ import { CurrentUserMiddleware } from '../common/middlewares/current-user.middle
 import { WarmupModule } from '../warmup';
 import { HealthcheckModule } from '../healthcheck';
 import { ConfigModule } from '@nestjs/config';
+import { StorageModule } from '../storage/storage.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ConfigModule } from '@nestjs/config';
     ChatModule,
     FirebaseAdminModule,
     ConfigModule.forRoot(),
+    StorageModule,
   ],
   controllers: [],
   providers: [],
