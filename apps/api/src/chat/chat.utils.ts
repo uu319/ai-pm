@@ -10,8 +10,7 @@ function countTokens(text: string) {
   return tokens.length;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function trimMessages(messages: Message[]): any[] {
+export function trimMessages(messages: Message[]): Message[] {
   const [systemMessage, ...restMessages] = messages;
 
   let totalTokens = countTokens(systemMessage.content) + MAX_RESPONSE_TOKENS;

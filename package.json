@@ -44,8 +44,13 @@
     "class-validator": "0.14.0",
     "dotenv": "16.3.1",
     "firebase-admin": "11.11.1",
+    "i": "^0.3.7",
+    "inpm": "^0.1.0",
     "langchain": "0.0.212",
     "mongodb": "5.9.2",
+    "npm": "^10.2.5",
+    "pdf-lib": "^1.17.1",
+    "pdf-parse": "^1.1.1",
     "reflect-metadata": "0.1.13",
     "rxjs": "7.8.0",
     "tslib": "2.3.0"
