@@ -8,6 +8,8 @@ import { Document } from 'langchain/document';
 import { aiConfig } from '../common/configs/ai-config.config';
 import { ConfigType } from '@nestjs/config';
 import { firebaseAdminConfig } from '../common/configs/firebase-admin.config';
+import { PDFLoader } from 'langchain/document_loaders/fs/pdf';
+// imports ChatCompletionMessageParam
 
 // This is a hack to make Multer available in the Express namespace
 
@@ -28,11 +30,13 @@ export class VectorStoreService {
     const parsedPdf = await pdf(file.buffer);
 
     const splitted = new CharacterTextSplitter({
-      chunkSize: 20000,
+      chunkSize: 10000,
       chunkOverlap: 500,
     });
 
     const textArray = await splitted.splitText(parsedPdf.text);
+
+    console.log('textArray', textArray);
     const pinecone = new Pinecone({
       apiKey: this.aiDefaultConfig.pineconeApiKey,
       environment: this.aiDefaultConfig.pineconeEnvironment,
@@ -65,12 +69,7 @@ export class VectorStoreService {
     );
   }
 
-  /**
-   * Query the vector store for similarity to the given query.
-   * @param query - The query string for similarity search.
-   * @returns A promise that resolves with the search results.
-   */
-  async queryFromEmbeding(query: string) {
+  async saveUsingPdfLoader(file: Express.Multer.File) {
     const pinecone = new Pinecone({
       apiKey: this.aiDefaultConfig.pineconeApiKey,
       environment: this.aiDefaultConfig.pineconeEnvironment,
@@ -78,16 +77,39 @@ export class VectorStoreService {
 
     const pineconeIndex = pinecone.Index('sample-index');
 
-    const vectorStore = await PineconeStore.fromExistingIndex(
+    const blob = new Blob([file.buffer]);
+    const loader = new PDFLoader(blob);
+
+    const docs = await loader.load();
+
+    const splitter = new CharacterTextSplitter({
+      chunkSize: 10000,
+      chunkOverlap: 500,
+    });
+
+    const splitDocs = await splitter.splitDocuments(docs);
+
+    // Reduce the size of the metadata for each document -- lots of useless pdf information
+    const reducedDocs = splitDocs.map((doc) => {
+      const reducedMetadata = { ...doc.metadata };
+      delete reducedMetadata.pdf; // Remove the 'pdf' field
+      return new Document({
+        pageContent: doc.pageContent,
+        metadata: reducedMetadata,
+      });
+    });
+
+    await PineconeStore.fromDocuments(
+      reducedDocs,
       new OpenAIEmbeddings({
         openAIApiKey: this.aiDefaultConfig.openApiKey,
       }),
-      { pineconeIndex }
+      {
+        pineconeIndex,
+        maxConcurrency: 5,
+        // namespace: randomString,
+      }
     );
-
-    const results = await vectorStore.similaritySearch(query, 1, {});
-
-    return results;
   }
 
   async checker() {

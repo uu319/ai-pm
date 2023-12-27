@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import storageConfig from '../common/configs/storage.config';
 import { FirebaseAdminService } from '../firebase-admin/firebase-admin.service';
 import { firebaseAdminConfig } from '../common/configs/firebase-admin.config';
+import { StorageController } from './storage.controller';
 
 @Module({
   imports: [
@@ -12,5 +13,6 @@ import { firebaseAdminConfig } from '../common/configs/firebase-admin.config';
   ],
   providers: [StorageService, FirebaseAdminService],
   exports: [StorageService],
+  controllers: [StorageController],
 })
 export class StorageModule {}
