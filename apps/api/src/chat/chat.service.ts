@@ -6,14 +6,22 @@ import { ConfigType } from '@nestjs/config';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import OpenAI from 'openai';
 import { MAX_RESPONSE_TOKENS, trimMessages } from './chat.util';
+import chatConfig from '../common/configs/chat.config';
 
 @Injectable()
 export class ChatService {
   constructor(
     @Inject(aiConfig.KEY)
-    private readonly aiDefaultConfig: ConfigType<typeof aiConfig>
+    private readonly aiDefaultConfig: ConfigType<typeof aiConfig>,
+    @Inject(chatConfig.KEY)
+    private readonly chatDefaultConfig: ConfigType<typeof chatConfig>
   ) {}
 
+  /**
+   * Process the given input and generate a response using OpenAI's GPT-3.5 model.
+   * @param input - The user input to be processed.
+   * @returns A promise that resolves with the generated response.
+   */
   async ask(input: string) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const systemMessage: any = {
@@ -45,12 +53,12 @@ export class ChatService {
 
       if (resultScore > 0.5) {
         systemMessage.content = `
-            You are a helpful AI assistant. Your knowledge is enriched by this document:
-            ---
-            ${resultContent}
-            ---
-            When possible, explain the reasoning for your responses based on this knowledge.
-          `;
+          ${this.chatDefaultConfig.pdfChatIntroSystemMessage}:
+          ---
+          ${resultContent}
+          ---
+          ${this.chatDefaultConfig.pdfChatReasoningSystemMessage}.
+        `;
       }
       ``;
     }
@@ -65,7 +73,7 @@ export class ChatService {
     return response;
   }
 
-  async converse() {}
-
   async summarize() {}
+
+  async converse() {}
 }

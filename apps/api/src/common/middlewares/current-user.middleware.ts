@@ -20,7 +20,7 @@ export class CurrentUserMiddleware implements NestMiddleware {
     const token = req.headers['authorization'];
     if (token) {
       const tokenString = token.replace('Bearer ', '');
-      const firebaseApp = this.firebaseAdminService.getFirebaseAdmin();
+      const firebaseApp = this.firebaseAdminService.firebaseAdmin();
 
       const user = await firebaseApp.auth().verifyIdToken(tokenString);
 
