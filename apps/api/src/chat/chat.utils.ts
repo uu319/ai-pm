@@ -5,7 +5,7 @@ const encoding = encoding_for_model('gpt-3.5-turbo');
 const TOKEN_LIMIT = 4097 * 0.9; // we want to be safe
 export const MAX_RESPONSE_TOKENS = 600;
 
-function countTokens(text: string) {
+export function countTokens(text: string) {
   const tokens = encoding.encode(text);
   return tokens.length;
 }
