@@ -15,5 +15,6 @@ import { VectorDatabaseModule } from '../vector-database/vector-database.module'
   ],
   providers: [ChatService, ChatConversationService],
   controllers: [ChatController],
+  exports: [ChatService, ChatConversationService],
 })
 export class ChatModule {}

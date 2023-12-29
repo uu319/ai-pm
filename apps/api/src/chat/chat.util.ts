@@ -29,8 +29,6 @@ export function trimMessages(messages: Message[]): any[] {
     }
   }
 
-  console.log(`Total tokens: ${totalTokens}`);
-
   trimmedMessages.unshift(systemMessage);
   return trimmedMessages;
 }

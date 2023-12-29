@@ -50,8 +50,6 @@ export class ChatService {
 
     const results = await vectorStore.similaritySearchWithScore(input, 1, {});
 
-    console.log(results.length);
-
     if (results.length > 0) {
       results[0][0].metadata;
       const result = results[0];

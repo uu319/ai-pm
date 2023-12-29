@@ -9,6 +9,7 @@ import { HealthcheckModule } from '../healthcheck';
 import { ConfigModule } from '@nestjs/config';
 import { StorageModule } from '../storage/storage.module';
 import { VectorDatabaseModule } from '../vector-database/vector-database.module';
+import { NotionModule } from '../notion/notion.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { VectorDatabaseModule } from '../vector-database/vector-database.module'
     ConfigModule.forRoot(),
     StorageModule,
     VectorDatabaseModule,
+    NotionModule,
   ],
   controllers: [],
   providers: [],

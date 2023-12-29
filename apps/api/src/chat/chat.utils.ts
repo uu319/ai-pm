@@ -28,8 +28,6 @@ export function trimMessages(messages: Message[]): Message[] {
     }
   }
 
-  console.log(`Total tokens: ${totalTokens}`);
-
   trimmedMessages.unshift(systemMessage);
   return trimmedMessages;
 }

@@ -143,7 +143,6 @@ export class ChatConversationService {
           question: string;
           chatHistory?: string | Array<string>;
         }) => {
-          console.log('fetching...');
           // Fetch relevant docs and serialize to a string.
           const relevantDocs = await retriever.getRelevantDocuments(
             previousStepResult.question
