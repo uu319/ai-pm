@@ -3,11 +3,7 @@ import pdf from '@cyber2024/pdf-parse-fixed';
 import { Pinecone } from '@pinecone-database/pinecone';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { PineconeStore } from 'langchain/vectorstores/pinecone';
-import {
-  CharacterTextSplitter,
-  MarkdownTextSplitter,
-  RecursiveCharacterTextSplitter,
-} from 'langchain/text_splitter';
+import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { Document } from 'langchain/document';
 import { aiConfig } from '../common/configs/ai-config.config';
 import { ConfigType } from '@nestjs/config';
