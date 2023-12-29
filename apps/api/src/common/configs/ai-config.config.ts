@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { AI } from './constants';
+import { AI } from '../constants';
 
 export const aiConfig = registerAs(AI, async () => {
   const config = {

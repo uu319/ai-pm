@@ -8,6 +8,7 @@ import { WarmupModule } from '../warmup';
 import { HealthcheckModule } from '../healthcheck';
 import { ConfigModule } from '@nestjs/config';
 import { StorageModule } from '../storage/storage.module';
+import { VectorDatabaseModule } from '../vector-database/vector-database.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { StorageModule } from '../storage/storage.module';
     FirebaseAdminModule,
     ConfigModule.forRoot(),
     StorageModule,
+    VectorDatabaseModule,
   ],
   controllers: [],
   providers: [],

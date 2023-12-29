@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Pinecone } from '@pinecone-database/pinecone';
 import { PineconeStore } from 'langchain/vectorstores/pinecone';
 import { aiConfig } from '../common/configs/ai-config.config';
 import { ConfigType } from '@nestjs/config';
@@ -13,6 +12,8 @@ import { PromptTemplate } from 'langchain/prompts';
 import { TokenTextSplitter } from 'langchain/text_splitter';
 import { Document } from 'langchain/document';
 import { MAX_RESPONSE_TOKENS, trimMessages } from './chat.util';
+import { PINECONE_APP } from '../common/constants';
+import { PineconeService } from '../vector-database/pinecone-service.service';
 
 @Injectable()
 export class ChatService {
@@ -20,7 +21,8 @@ export class ChatService {
     @Inject(aiConfig.KEY)
     private readonly aiDefaultConfig: ConfigType<typeof aiConfig>,
     @Inject(chatConfig.KEY)
-    private readonly chatDefaultConfig: ConfigType<typeof chatConfig>
+    private readonly chatDefaultConfig: ConfigType<typeof chatConfig>,
+    @Inject(PINECONE_APP) private readonly pineconeService: PineconeService
   ) {}
 
   /**
@@ -36,12 +38,7 @@ export class ChatService {
     };
     const openAi = new OpenAI({ apiKey: this.aiDefaultConfig.openApiKey });
 
-    const pinecone = new Pinecone({
-      apiKey: this.aiDefaultConfig.pineconeApiKey,
-      environment: this.aiDefaultConfig.pineconeEnvironment,
-    });
-
-    const pineconeIndex = pinecone.Index('sample-index');
+    const pineconeIndex = this.pineconeService.client.Index('sample-index');
 
     const vectorStore = await PineconeStore.fromExistingIndex(
       new OpenAIEmbeddings({
@@ -85,12 +82,7 @@ export class ChatService {
   }
 
   async askUsingVectorQAChain(input: string) {
-    const pinecone = new Pinecone({
-      apiKey: this.aiDefaultConfig.pineconeApiKey,
-      environment: this.aiDefaultConfig.pineconeEnvironment,
-    });
-
-    const pineconeIndex = pinecone.Index('sample-index');
+    const pineconeIndex = this.pineconeService.client.Index('sample-index');
 
     const vectorStore = await PineconeStore.fromExistingIndex(
       new OpenAIEmbeddings({

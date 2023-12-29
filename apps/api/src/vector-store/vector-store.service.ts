@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import pdf from '@cyber2024/pdf-parse-fixed';
-import { Pinecone } from '@pinecone-database/pinecone';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { PineconeStore } from 'langchain/vectorstores/pinecone';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
@@ -10,6 +9,8 @@ import { ConfigType } from '@nestjs/config';
 import { firebaseAdminConfig } from '../common/configs/firebase-admin.config';
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf';
 import { countTokens } from '../chat/chat.utils';
+import { PINECONE_APP } from '../common/constants';
+import { PineconeService } from '../vector-database/pinecone-service.service';
 // imports ChatCompletionMessageParam
 
 // This is a hack to make Multer available in the Express namespace
@@ -20,7 +21,8 @@ export class VectorStoreService {
     @Inject(aiConfig.KEY)
     private readonly aiDefaultConfig: ConfigType<typeof aiConfig>,
     @Inject(firebaseAdminConfig.KEY)
-    private readonly firebaseConfig: ConfigType<typeof firebaseAdminConfig>
+    private readonly firebaseConfig: ConfigType<typeof firebaseAdminConfig>,
+    @Inject(PINECONE_APP) private readonly pineconeService: PineconeService
   ) {}
   /**
    * Process the given file and store its content in the vector store.
@@ -39,12 +41,6 @@ export class VectorStoreService {
 
     const textArray = await splitted.splitText(parsedPdf.text);
 
-    console.log('textArray', textArray);
-    const pinecone = new Pinecone({
-      apiKey: this.aiDefaultConfig.pineconeApiKey,
-      environment: this.aiDefaultConfig.pineconeEnvironment,
-    });
-
     const randomString = Math.random().toString(36).substring(2, 9);
 
     const documents = textArray.map(
@@ -57,7 +53,7 @@ export class VectorStoreService {
         })
     );
 
-    const pineconeIndex = pinecone.Index('sample-index');
+    const pineconeIndex = this.pineconeService.client.Index('sample-index');
 
     await PineconeStore.fromDocuments(
       documents,
@@ -73,12 +69,7 @@ export class VectorStoreService {
   }
 
   async saveUsingPdfLoader(file: Express.Multer.File) {
-    const pinecone = new Pinecone({
-      apiKey: this.aiDefaultConfig.pineconeApiKey,
-      environment: this.aiDefaultConfig.pineconeEnvironment,
-    });
-
-    const pineconeIndex = pinecone.Index('sample-index');
+    const pineconeIndex = this.pineconeService.client.Index('sample-index');
 
     const blob = new Blob([file.buffer]);
     const loader = new PDFLoader(blob);
@@ -114,12 +105,5 @@ export class VectorStoreService {
         // namespace: randomString,
       }
     );
-  }
-
-  async checker() {
-    return {
-      ...this.aiDefaultConfig,
-      ...this.firebaseConfig,
-    };
   }
 }

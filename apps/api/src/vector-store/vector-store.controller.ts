@@ -1,6 +1,5 @@
 import {
   Controller,
-  Get,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -17,10 +16,5 @@ export class VectorStoreController {
   @UseInterceptors(FileInterceptor('file'))
   upload(@UploadedFile() file: Express.Multer.File) {
     this.vectorStoreService.saveUsingPdfLoader(file);
-  }
-
-  @Get('/checker')
-  checker() {
-    return this.vectorStoreService.checker();
   }
 }
