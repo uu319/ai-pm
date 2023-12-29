@@ -3,12 +3,13 @@ import pdf from '@cyber2024/pdf-parse-fixed';
 import { Pinecone } from '@pinecone-database/pinecone';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { PineconeStore } from 'langchain/vectorstores/pinecone';
-import { CharacterTextSplitter } from 'langchain/text_splitter';
+import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { Document } from 'langchain/document';
 import { aiConfig } from '../common/configs/ai-config.config';
 import { ConfigType } from '@nestjs/config';
 import { firebaseAdminConfig } from '../common/configs/firebase-admin.config';
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf';
+import { countTokens } from '../chat/chat.utils';
 // imports ChatCompletionMessageParam
 
 // This is a hack to make Multer available in the Express namespace
@@ -29,9 +30,11 @@ export class VectorStoreService {
   async save(file: Express.Multer.File): Promise<void> {
     const parsedPdf = await pdf(file.buffer);
 
-    const splitted = new CharacterTextSplitter({
-      chunkSize: 10000,
-      chunkOverlap: 500,
+    const splitted = new RecursiveCharacterTextSplitter({
+      chunkSize: 3000,
+      chunkOverlap: 300,
+      lengthFunction: countTokens,
+      separators: ['\n\n', '\n', ' ', '', '---'],
     });
 
     const textArray = await splitted.splitText(parsedPdf.text);
@@ -82,11 +85,12 @@ export class VectorStoreService {
 
     const docs = await loader.load();
 
-    const splitter = new CharacterTextSplitter({
-      chunkSize: 10000,
-      chunkOverlap: 500,
+    const splitter = new RecursiveCharacterTextSplitter({
+      chunkSize: 1000,
+      chunkOverlap: 300,
+      lengthFunction: countTokens,
+      separators: ['\n\n', '\n', ' ', ''],
     });
-
     const splitDocs = await splitter.splitDocuments(docs);
 
     // Reduce the size of the metadata for each document -- lots of useless pdf information

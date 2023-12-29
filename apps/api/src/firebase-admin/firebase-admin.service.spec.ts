@@ -44,7 +44,7 @@ describe('FirebaseAdminService', () => {
   });
 
   it('should return the Firebase admin app instance', () => {
-    const firebaseAppInstance = firebaseAdminService.getFirebaseAdmin();
+    const firebaseAppInstance = firebaseAdminService.firebaseAdmin();
     expect(firebaseAppInstance).toBeDefined();
     // Add more assertions or specific tests related to the Firebase admin app instance
   });

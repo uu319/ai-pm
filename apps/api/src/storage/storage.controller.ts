@@ -6,6 +6,6 @@ export class StorageController {
   constructor(private readonly storageService: StorageService) {}
   // Nest controller get route method
   @Get() getStorage() {
-    return this.storageService.getFile();
+    return this.storageService.getFile('upload/something2.pdf');
   }
 }
