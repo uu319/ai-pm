@@ -11,6 +11,8 @@ import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { VectorDBQAChain } from 'langchain/chains';
 import { OpenAI as OpenAiModel } from 'langchain/llms/openai';
 import { aiConfig } from '../common/configs/ai-config.config';
+import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
+import { countTokens } from '../chat/chat.utils';
 
 @Injectable()
 export class NotionService {
@@ -54,8 +56,25 @@ export class NotionService {
       });
     });
 
+    const splitter = new RecursiveCharacterTextSplitter({
+      chunkOverlap: 100,
+      chunkSize: 500,
+      lengthFunction: countTokens,
+    });
+
+    const splittedDocs = (await splitter.splitDocuments(docs)).map(
+      (doc) =>
+        new Document({
+          pageContent: doc.pageContent,
+          metadata: {
+            url: doc.metadata.url,
+            type: doc.metadata.object,
+          },
+        })
+    );
+
     const vectorStore = await MemoryVectorStore.fromDocuments(
-      docs,
+      splittedDocs,
       new OpenAIEmbeddings()
     );
 
