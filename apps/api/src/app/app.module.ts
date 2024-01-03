@@ -10,6 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { StorageModule } from '../storage/storage.module';
 import { VectorDatabaseModule } from '../vector-database/vector-database.module';
 import { NotionModule } from '../notion/notion.module';
+import { ResumeModule } from '../resume/resume.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { NotionModule } from '../notion/notion.module';
     StorageModule,
     VectorDatabaseModule,
     NotionModule,
+    ResumeModule,
   ],
   controllers: [],
   providers: [],
