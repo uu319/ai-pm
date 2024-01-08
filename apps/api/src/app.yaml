@@ -1,6 +1,6 @@
 runtime: nodejs18
 automatic_scaling:
-  min_idle_instances: 0
+  min_idle_instances: 1
   max_concurrent_requests: 30
 
 instance_class: F1
