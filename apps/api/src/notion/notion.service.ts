@@ -139,7 +139,6 @@ export class NotionService {
   ) {
     try {
       const { type, notionPageOrDatabaseId } = params;
-      console.log('type', notionPageOrDatabaseId);
       const pineconeIndex = this.pineconeService.client.Index('sample-index');
 
       const docs = await new NotionAPILoader({
