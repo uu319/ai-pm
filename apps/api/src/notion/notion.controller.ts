@@ -4,7 +4,7 @@ import { NOTION_APP } from '../common/constants';
 import { NotionSearchParamsDto } from './dto/notion-search-params.dto';
 import { NotionSaveToVectorStoreParamsDto } from './dto/notion-save-to-vector-store-params';
 
-@Controller('notion')
+@Controller('web-loader-assistant/notion')
 export class NotionController {
   constructor(
     @Inject(NOTION_APP) private readonly notionService: NotionService

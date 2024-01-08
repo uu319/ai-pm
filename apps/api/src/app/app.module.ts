@@ -11,6 +11,7 @@ import { StorageModule } from '../storage/storage.module';
 import { VectorDatabaseModule } from '../vector-database/vector-database.module';
 import { NotionModule } from '../notion/notion.module';
 import { ResumeModule } from '../resume/resume.module';
+import { SymphChanModule } from '../symph-chan/symph-chan.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ResumeModule } from '../resume/resume.module';
     VectorDatabaseModule,
     NotionModule,
     ResumeModule,
+    SymphChanModule,
   ],
   controllers: [],
   providers: [],
